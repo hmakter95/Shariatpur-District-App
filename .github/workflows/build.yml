@@ -1,0 +1,42 @@
+name: Build Shariatpur Android APK
+
+on:
+workflow_dispatch:
+push:
+branches:
+- main
+
+permissions:
+contents: read
+
+jobs:
+build:
+runs-on: ubuntu-latest
+
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+
+  - name: Set up Flutter
+    uses: subosito/flutter-action@v2
+    with:
+      channel: stable
+      cache: true
+
+  - name: Create Flutter Android project
+    run: |
+      flutter create --platforms=android --project-name shariatpur_district_app .
+  
+  - name: Get dependencies
+    run: flutter pub get
+
+  - name: Build APK
+    run: flutter build apk --release
+
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: shariatpur-district-app
+      path: build/app/outputs/flutter-apk/app-release.apk
+      if-no-files-found: error
+      retention-days: 7
