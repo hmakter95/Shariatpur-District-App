@@ -1,4 +1,4 @@
-name: Build Shariatpur Android APK
+name: Android APK build workflow
 
 on:
 workflow_dispatch:
@@ -21,19 +21,17 @@ steps:
     uses: subosito/flutter-action@v2
     with:
       channel: stable
-      cache: true
 
-  - name: Create Flutter Android project
-    run: |
-      flutter create --platforms=android --project-name shariatpur_district_app .
-  
+  - name: Create Android project files
+    run: flutter create --platforms=android --project-name shariatpur_district_app .
+
   - name: Get dependencies
     run: flutter pub get
 
-  - name: Build APK
+  - name: Build release APK
     run: flutter build apk --release
 
-  - name: Upload APK
+  - name: Upload APK artifact
     uses: actions/upload-artifact@v4
     with:
       name: shariatpur-district-app
